@@ -66,6 +66,27 @@ export default function RootLayout() {
                 presentation: 'modal'
               }}
             />
+            <Stack.Screen
+              name="notifications/index"
+              options={{
+                headerShown: false,
+                animation: 'slide_from_right'
+              }}
+            />
+            <Stack.Screen
+              name="payment/verify"
+              options={{
+                headerShown: false,
+                animation: 'slide_from_bottom'
+              }}
+            />
+            <Stack.Screen
+              name="payment/result"
+              options={{
+                headerShown: false,
+                animation: 'slide_from_bottom'
+              }}
+            />
           </Stack>
         </CartProvider>
       </AuthProvider>

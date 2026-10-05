@@ -43,15 +43,19 @@ export type AddressType = 'HOME' | 'WORK' | 'OTHER';
 
 export interface Address {
   id?: number;
-  street: string;
+  street?: string;
   landmark?: string;
-  city: string;
-  state: string;
-  pincode: string;
-  type: AddressType;
+  city?: string;
+  state?: string;
+  pincode?: string;
+  type?: AddressType;
   isDefault?: boolean;
   contactName?: string;
   contactPhone?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  postalCode?: string;
+  userId?: number;
 }
 
 export interface User {
@@ -64,6 +68,7 @@ export interface User {
 }
 
 export type OrderStatus =
+  | 'PLACED'
   | 'PENDING'
   | 'CONFIRMED'
   | 'PROCESSING'
@@ -89,23 +94,34 @@ export interface Order {
   id: number;
   orderNumber: string;
   customerId: number;
+  customerName?: string;
+  customerEmail?: string;
+  customerPhone?: string;
   orderDate: string;
   status: OrderStatus;
   totalAmount: number;
   subtotalAmount?: number;
+  subtotal?: number;
+  deliveryCharge?: number;
   deliveryFee?: number;
   handlingFee?: number;
   discountAmount?: number;
   paymentStatus: PaymentStatus;
   paymentMethod: PaymentMethod;
-  deliveryAddress: Address | string;
+  deliveryAddress?: Address | string;
+  deliveryAddressText?: string;
+  deliveryAddressId?: number;
   items: OrderItem[];
   estimatedDelivery?: string;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
 }
 
 export interface CreateOrderPayload {
   customerId?: number;
-  deliveryAddress: Address | string;
+  addressId?: number;
+  deliveryAddressText?: string;
+  deliveryAddress?: Address | string;
   paymentMethod: PaymentMethod;
   items: {
     productId: number;
@@ -129,3 +145,60 @@ export interface Banner {
   accentColor: string;
   categoryId?: number;
 }
+
+export type NotificationType = 'ORDER' | 'PAYMENT' | 'OFFER' | 'SYSTEM';
+
+export interface NotificationItem {
+  id: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  timestamp: string;
+  isRead: boolean;
+  orderId?: number;
+  orderNumber?: string;
+  actionUrl?: string;
+  badgeText?: string;
+  icon?: string;
+}
+
+export interface NotificationPreferences {
+  orderUpdates: boolean;
+  deliveryAlerts: boolean;
+  promotionalOffers: boolean;
+  paymentAlerts: boolean;
+}
+
+export interface RazorpayOrderResponse {
+  razorpayOrderId: string;
+  razorpayKeyId: string;
+  amount: number; // in paise
+  currency: string;
+  orderId: number;
+}
+
+export interface PaymentVerificationRequest {
+  orderId: number;
+  razorpayOrderId: string;
+  razorpayPaymentId: string;
+  razorpaySignature: string;
+}
+
+export interface PaymentVerificationResponse {
+  success: boolean;
+  message: string;
+  orderId: number;
+  orderNumber: string;
+  paymentStatus: PaymentStatus;
+}
+
+export type PaymentFlowState =
+  | 'IDLE'
+  | 'INITIATING'
+  | 'GATEWAY_OPEN'
+  | 'VERIFYING'
+  | 'SUCCESS'
+  | 'FAILED'
+  | 'CANCELLED'
+  | 'PENDING';
+

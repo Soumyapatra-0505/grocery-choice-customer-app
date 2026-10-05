@@ -2,6 +2,8 @@
  * Grocery Choice Customer App - Global Configuration & Constants
  */
 
+declare const process: any;
+
 export const APP_CONFIG = {
   APP_NAME: 'Grocery Choice',
   TAGLINE: 'Fresh Groceries Delivered in Minutes',
@@ -11,6 +13,11 @@ export const APP_CONFIG = {
   API_BASE_URL:
     process.env.EXPO_PUBLIC_API_BASE_URL ||
     'https://grocery-choice-backend-production.up.railway.app/api',
+
+  // Customer Web Storefront URL (Payment Bridge Host)
+  CUSTOMER_WEB_URL:
+    process.env.EXPO_PUBLIC_CUSTOMER_WEB_URL ||
+    'https://grocery-choice-customer.vercel.app',
 
   // Delivery & Quick Commerce Defaults
   DELIVERY_SLA_MINUTES: '10-15 MINS',
@@ -32,6 +39,8 @@ export const APP_CONFIG = {
     CART_ITEMS: 'gc_cart_items',
     DELIVERY_ADDRESS: 'gc_active_address',
     SAVED_ADDRESSES: 'gc_saved_addresses',
-    RECENT_SEARCHES: 'gc_recent_searches'
+    RECENT_SEARCHES: 'gc_recent_searches',
+    READ_NOTIFICATIONS: 'gc_read_notifications',
+    NOTIFICATION_PREFERENCES: 'gc_notification_preferences'
   }
 };

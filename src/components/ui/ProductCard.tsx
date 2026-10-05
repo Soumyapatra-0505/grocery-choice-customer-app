@@ -7,11 +7,11 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   StyleSheet,
   ViewStyle
 } from 'react-native';
+import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { Product } from '@/types';
 import { colors, radius, spacing, typography, shadows } from '@/theme';
@@ -69,7 +69,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, style }) => {
         <Image
           source={{ uri: imageUrl }}
           style={styles.image}
-          resizeMode="contain"
+          contentFit="contain"
+          cachePolicy="memory-disk"
+          transition={150}
           onError={() => setImageError(true)}
         />
 

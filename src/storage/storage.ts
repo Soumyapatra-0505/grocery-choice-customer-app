@@ -5,7 +5,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { APP_CONFIG } from '@/constants/config';
-import { Address, CartItem, User } from '@/types';
+import { Address, CartItem, User, NotificationPreferences } from '@/types';
 
 // In-memory fallback dictionary for test or unsupported environments
 const memoryFallback = new Map<string, string>();
@@ -89,5 +89,38 @@ export const storageService = {
     const existing = (await storage.get<string[]>(APP_CONFIG.STORAGE_KEYS.RECENT_SEARCHES)) || [];
     const updated = [clean, ...existing.filter((s) => s.toLowerCase() !== clean.toLowerCase())].slice(0, 10);
     await storage.set(APP_CONFIG.STORAGE_KEYS.RECENT_SEARCHES, updated);
+  },
+
+  // Notification Read States & Preferences
+  getReadNotificationIds: async (): Promise<string[]> => {
+    const ids = await storage.get<string[]>(APP_CONFIG.STORAGE_KEYS.READ_NOTIFICATIONS);
+    return Array.isArray(ids) ? ids : [];
+  },
+  markNotificationAsRead: async (id: string): Promise<string[]> => {
+    const existing = await storageService.getReadNotificationIds();
+    if (!existing.includes(id)) {
+      const updated = [...existing, id];
+      await storage.set(APP_CONFIG.STORAGE_KEYS.READ_NOTIFICATIONS, updated);
+      return updated;
+    }
+    return existing;
+  },
+  markAllNotificationsAsRead: async (ids: string[]): Promise<string[]> => {
+    const existing = await storageService.getReadNotificationIds();
+    const merged = Array.from(new Set([...existing, ...ids]));
+    await storage.set(APP_CONFIG.STORAGE_KEYS.READ_NOTIFICATIONS, merged);
+    return merged;
+  },
+  getNotificationPreferences: async (): Promise<NotificationPreferences> => {
+    const prefs = await storage.get<NotificationPreferences>(APP_CONFIG.STORAGE_KEYS.NOTIFICATION_PREFERENCES);
+    return prefs || {
+      orderUpdates: true,
+      deliveryAlerts: true,
+      promotionalOffers: true,
+      paymentAlerts: true
+    };
+  },
+  setNotificationPreferences: async (prefs: NotificationPreferences): Promise<void> => {
+    await storage.set(APP_CONFIG.STORAGE_KEYS.NOTIFICATION_PREFERENCES, prefs);
   }
 };
